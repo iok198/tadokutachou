@@ -1,0 +1,27 @@
+{
+  "name": "tadokutachou",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iok198/tadokutachou.git"
+  },
+  "keywords": [
+    "japanese",
+    "language",
+    "language_learning",
+    "youtube",
+    "subtitles",
+    "immersoin"
+  ],
+  "author": "Isaac, Keji",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iok198/tadokutachou/issues"
+  },
+  "homepage": "https://github.com/iok198/tadokutachou#readme"
+}
