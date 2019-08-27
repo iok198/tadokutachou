@@ -1,1 +1,1 @@
-# tadokutachou
+# 多読多聴 (tadokutachou)
