@@ -24,6 +24,9 @@
                 referrer: 'no-referrer', 
                 body: JSON.stringify(data), 
             })
+            .then(data => data.json())
+            .then(console.log)
+            .then(err => console.error)
         }
     </script>
 </head>
@@ -31,5 +34,4 @@
     <h1>Find Subtitles</h1>
     <input type="text" id="subtitle" />
     <button onclick="requestSubtitles()">Submit</button>
-</body>
 </html>

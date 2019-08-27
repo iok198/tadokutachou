@@ -20,10 +20,6 @@ app.set('view engine', 'hbs')
 app.get("/", (req, res) => res.send("<h1>Hello World!</h1>"))
 app.use("/api", subtitles)
 
-app.get("/test", (req, res, next) => {
-    res.sendFile(path.join(__dirname + "../index.hbs"));
-})
-
 app.use((req, res, next) => {
     var err = new Error("Not Found")
     err.status = 404

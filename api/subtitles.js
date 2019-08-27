@@ -7,7 +7,7 @@ const ytdl = require("youtube-dl")
 const router = express.Router()
 
 router.get("/subtitles", (req, res, next) => {
-    res.render("index");
+    res.render("index", {loadedData: false});
 })
 
 router.post("/subtitles", (req, res, next) => {
@@ -17,16 +17,16 @@ router.post("/subtitles", (req, res, next) => {
         all: false,
         format: "srt",
         lang: "ja",
-        cwd: __dirname
+        cwd: path.join(__dirname, "temp")
     }
 
     ytdl.getSubs(url, options, (err, files) => {
         if (err) throw err
         console.log('subtitle files downloaded:', files)
-        fs.readFile(path.join(__dirname, files[0]), 'utf8', (err, data) => {
+        fs.readFile(path.join(__dirname, "temp", files[0]), 'utf8', (err, data) => {
             if (err) throw err
             let lines = textTools.parseSRT(data)
-			console.log(lines)
+            res.json(lines)
         })
     })
 })
