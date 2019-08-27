@@ -1,7 +1,10 @@
 const express = require("express")
-const router = express.Router()
+const fs = require('fs')
 const path = require("path")
+const textTools = require("../tools/text")
 const ytdl = require("youtube-dl")
+
+const router = express.Router()
 
 router.get("/subtitles", (req, res, next) => {
     res.render("index");
@@ -18,8 +21,13 @@ router.post("/subtitles", (req, res, next) => {
     }
 
     ytdl.getSubs(url, options, (err, files) => {
-        if (err) throw err;
-        console.log('subtitle files downloaded:', files);
+        if (err) throw err
+        console.log('subtitle files downloaded:', files)
+        fs.readFile(path.join(__dirname, files[0]), 'utf8', (err, data) => {
+            if (err) throw err
+            let lines = textTools.parseSRT(data)
+			console.log(lines)
+        })
     })
 })
 
