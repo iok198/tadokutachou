@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>多読多聴</title>
-    <script>
+</head>
+<body>
+    <h1>Find Subtitles</h1>
+    <div id="player"></div>
+    <input type="text" id="subtitle" />
+    <button onclick="requestSubtitles()">Submit</button>
+    <ol id="subtitle-place"></ol>
+	<script>
         // YouTube shit
         let tag = document.createElement('script')
         tag.src = "https://www.youtube.com/iframe_api"
@@ -14,37 +21,29 @@
         let player
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: 'M7lc1UVf-VE',
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
+	            height: '390',
+	            width: '640',
+	            videoId: 'M7lc1UVf-VE',
+	            events: {
+	                'onStateChange': onPlayerStateChange,
+					'onReady': onPlayerReady
+	            }
             })
         }
-        let done = false
+
+		function goToSeek(item) {
+			let sentenceBeginning = item.dataset['sentenceBeginning']
+			let sentenceEnd = item.dataset['sentenceEnd']
+			player.seekTo(sentenceBeginning)
+		}
+
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING && !done) {
-            setTimeout(stopVideo, 6000)
-            done = true
-            }
+			console.log(event);
         }
-        function stopVideo() {
-            player.stopVideo()
-        }
-        let player
-        function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: 'M7lc1UVf-VE',
-            events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
-            }
-        })
-        }
+
+		function onPlayerReady() {
+			console.log('ready');
+		}
 
         function requestSubtitles() {
             let vidLink = document.getElementById("subtitle").value
@@ -52,36 +51,27 @@
                 url: vidLink
             }
 
+			player.loadVideoById(vidLink.split('=')[1])
             fetch("/api/subtitles", {
                 method: "POST",
-                mode: 'cors', 
-                cache: 'no-cache', 
-                credentials: 'same-origin', 
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 redirect: 'follow',
-                referrer: 'no-referrer', 
-                body: JSON.stringify(data), 
+                referrer: 'no-referrer',
+                body: JSON.stringify(data),
             })
             .then(data => data.json())
             .then(subtitleData => {
                 subtitleData.forEach((data, i) => {
                     let { sentenceBeginning, sentenceEnd, startTime, endTime, text } = data
-                    document.getElementById("subtitle-place").innerHTML += `<li>${text}</li>`
+                    document.getElementById("subtitle-place").innerHTML += `<li onclick='goToSeek(this)' data-sentence-beginning='${sentenceBeginning}' data-sentence-end='${sentenceEnd}'>${text}</li>`
                 })
-
             })
             .then(err => console.error)
         }
     </script>
-</head>
-<body>
-    <h1>Find Subtitles</h1>
-    <iframe id="player" type="text/html" width="640" height="390"
-        src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
-        frameborder="0"></iframe><br>
-    <input type="text" id="subtitle" />
-    <button onclick="requestSubtitles()">Submit</button>
-    <ol id="subtitle-place"></ol>
 </html>
