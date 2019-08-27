@@ -6,6 +6,46 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>多読多聴</title>
     <script>
+        // YouTube shit
+        let tag = document.createElement('script')
+        tag.src = "https://www.youtube.com/iframe_api"
+        let firstScriptTag = document.getElementsByTagName('script')[0]
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
+        let player
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: 'M7lc1UVf-VE',
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+            }
+            })
+        }
+        let done = false
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+            setTimeout(stopVideo, 6000)
+            done = true
+            }
+        }
+        function stopVideo() {
+            player.stopVideo()
+        }
+        let player
+        function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '390',
+            width: '640',
+            videoId: 'M7lc1UVf-VE',
+            events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+            }
+        })
+        }
+
         function requestSubtitles() {
             let vidLink = document.getElementById("subtitle").value
             let data = {
@@ -25,13 +65,23 @@
                 body: JSON.stringify(data), 
             })
             .then(data => data.json())
-            .then(console.log)
+            .then(subtitleData => {
+                subtitleData.forEach((data, i) => {
+                    let { sentenceBeginning, sentenceEnd, startTime, endTime, text } = data
+                    document.getElementById("subtitle-place").innerHTML += `<li>${text}</li>`
+                })
+
+            })
             .then(err => console.error)
         }
     </script>
 </head>
 <body>
     <h1>Find Subtitles</h1>
+    <iframe id="player" type="text/html" width="640" height="390"
+        src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
+        frameborder="0"></iframe><br>
     <input type="text" id="subtitle" />
     <button onclick="requestSubtitles()">Submit</button>
+    <ol id="subtitle-place"></ol>
 </html>
