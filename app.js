@@ -8,7 +8,10 @@ const hbs = require("express-handlebars")
 const app = express()
 const server = http.createServer(app)
 
-let subtitles = require("./api/subtitles")
+const mecab = require("./tools/mecab")
+const subtitles = require("./api/subtitles")
+
+mecab.parseSentence("お前はもう死んでいる").then(console.log)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
