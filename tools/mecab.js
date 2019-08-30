@@ -33,43 +33,35 @@ async function parseSentence(sentence) {
     let mecabResults = await tokenizeSentence(sentence)
 
     return mecabResults.reduce((results, mecabResult) => {
-        let joinPrevious = () => {
-            results.sentence[results.sentence.length - 1] += mecabResult.original
+		let shouldJoinToPrevious = false
+
+        if (mecabResult.partOfSpeechDescriptors.some(d => d === "接続助詞") && ["で", "て"].includes(mecabResult.dictionaryForm)) {
+			// て形
+			shouldJoinToPrevious = true
+        } else if (["特殊・タ", "特殊・ナイ"].includes(mecabResult.conjugation)) {
+			// 〜た・〜ない
+            shouldJoinToPrevious = true
         }
 
-        /* -------- Edge cases -------- */ 
-        if(mecabResult.partOfSpeech === "助詞") {
-            
-            if(mecabResult.partOfSpeechDescriptors[0] === "接続助詞") {
-                joinPrevious()
-                results.components.push(mecabResult)
-                return results
-            } else {
-                results.sentence.push(mecabResult.original)   
-                results.components.push(mecabResult)
-        
-                return results
-            }
-        }
-
-        if(mecabResult.conjugation === "特殊・タ") {
-            joinPrevious()
-            results.components.push(mecabResult)
-            return results
-        } else {
-            results.sentence.push(mecabResult.original)   
-            results.components.push(mecabResult)
-    
-            return results
-        }
-
-        /* -------------------------- */
-
-        results.sentence.push(mecabResult.original)   
-        results.components.push(mecabResult)
+		let previousResult = results[results.length - 1]
+		if (typeof previousResult !== 'undefined' && shouldJoinToPrevious) {
+			previousResult.original += mecabResult.original
+			previousResult.dictionaryForm += mecabResult.dictionaryForm
+			previousResult.reading += mecabResult.reading
+			previousResult.prounciation += mecabResult.prounciation
+			previousResult.components.push(mecabResult)
+		} else {
+			results.push({
+				original: mecabResult.original,
+				dictionaryForm: mecabResult.dictionaryForm,
+				reading: mecabResult.reading,
+				prounciation: mecabResult.prounciation,
+				components: [mecabResult]
+			})
+		}
 
         return results
-    }, { components: [], sentence: [] })
+    }, [])
 }
 
 module.exports = {

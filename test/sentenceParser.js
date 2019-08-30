@@ -7,21 +7,16 @@ describe("Sentence parser", () => {
     it("Retuns the right data types", async () => {
         let exampleParse = await parseSentence(testCases[0].sentence)
 
-        assert.isNotEmpty(exampleParse.sentence)
-        assert.typeOf(exampleParse.sentence, "array")
-
-        assert.isNotEmpty(exampleParse.components)
-        assert.typeOf(exampleParse.components, "array")
-
+        assert.typeOf(exampleParse, "array")
+		assert.isNotEmpty(exampleParse)
     })
 
     it("Parses the data correctly", async () => {
-        for(let i = 0; i < testCases.length; i++) {
-            let parsedSentence = await parseSentence(testCases[i].sentence)
-            
-            for(let j = 0; j < parsedSentence.sentence.length; j++) {
-                assert.equal(parsedSentence.sentence[j], testCases[i].parsed[j], "Compares the generated thing with the test cases")
-            }
+        for (const testCase of testCases) {
+            const parsedSentence = await parseSentence(testCase.sentence)
+			for (const [index, x] of parsedSentence.entries()) {
+            	assert.equal(x.original, testCase.parsed[index], "Compares the generated thing with the test cases")
+			}
         }
     })
 })
