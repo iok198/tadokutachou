@@ -11,7 +11,7 @@ const server = http.createServer(app)
 const mecab = require("./tools/mecab")
 const subtitles = require("./api/subtitles")
 
-mecab.parseSentence("お前はもう死んでいる").then(console.log)
+mecab.tokenizeSentence("どれも面白くなかったから").then(console.log)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())

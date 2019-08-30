@@ -33,12 +33,43 @@ async function parseSentence(sentence) {
     let mecabResults = await tokenizeSentence(sentence)
 
     return mecabResults.reduce((results, mecabResult) => {
-        results.push({
-            components: [mecabResult]
-        })
+        let joinPrevious = () => {
+            results.sentence[results.sentence.length - 1] += mecabResult.original
+        }
+
+        /* -------- Edge cases -------- */ 
+        if(mecabResult.partOfSpeech === "助詞") {
+            
+            if(mecabResult.partOfSpeechDescriptors[0] === "接続助詞") {
+                joinPrevious()
+                results.components.push(mecabResult)
+                return results
+            } else {
+                results.sentence.push(mecabResult.original)   
+                results.components.push(mecabResult)
+        
+                return results
+            }
+        }
+
+        if(mecabResult.conjugation === "特殊・タ") {
+            joinPrevious()
+            results.components.push(mecabResult)
+            return results
+        } else {
+            results.sentence.push(mecabResult.original)   
+            results.components.push(mecabResult)
+    
+            return results
+        }
+
+        /* -------------------------- */
+
+        results.sentence.push(mecabResult.original)   
+        results.components.push(mecabResult)
 
         return results
-    }, [])
+    }, { components: [], sentence: [] })
 }
 
 module.exports = {
