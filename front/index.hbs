@@ -66,13 +66,9 @@
             })
             .then(data => data.json())
             .then(subtitleData => {
-                console.log(subtitleData)
                 subtitleData.forEach((lines, i) => {
                     let { sentenceBeginning, sentenceEnd } = lines
-                    let subtitleText = lines.parsedData.reduce((totalString, newString) => { 
-                        return totalString + "|" + newString.original 
-                    }, "")
-                    console.log(lines)
+                    let subtitleText = lines.parsedData.map(line => line.original).join("|")
                     document.getElementById("subtitle-place").innerHTML += `<li onclick='goToSeek(this)' data-sentence-beginning='${sentenceBeginning}' data-sentence-end='${sentenceEnd}'>${subtitleText}</li>`
                 })
             })

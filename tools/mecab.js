@@ -31,17 +31,24 @@ function tokenizeSentence(sentence) {
 
 async function parseSentence(sentence) {
     let mecabResults = await tokenizeSentence(sentence)
+    let shouldJoinToNext = false
 
     return mecabResults.reduce((results, mecabResult) => {
-		let shouldJoinToPrevious = false
-
+        let shouldJoinToPrevious = false
+        
         if (mecabResult.partOfSpeechDescriptors.some(d => d === "接続助詞") && ["で", "て"].includes(mecabResult.dictionaryForm)) {
 			// て形
 			shouldJoinToPrevious = true
-        } else if (["特殊・タ", "特殊・ナイ"].includes(mecabResult.conjugation)) {
+        } else if (["特殊・タ", "特殊・ナイ", "特殊・タイ", "特殊・マス"].includes(mecabResult.conjugation)) {
 			// 〜た・〜ない
             shouldJoinToPrevious = true
+        } else if (mecabResult.partOfSpeechDescriptors.some(d => ["接尾"].includes(d))) {
+            shouldJoinToPrevious = true
+        } else if (shouldJoinToNext) {
+            shouldJoinToPrevious = true
         }
+
+        shouldJoinToNext = ["接頭詞"].includes(mecabResult.partOfSpeech)
 
 		let previousResult = results[results.length - 1]
 		if (typeof previousResult !== 'undefined' && shouldJoinToPrevious) {
