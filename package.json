@@ -27,11 +27,14 @@
   },
   "homepage": "https://github.com/iok198/tadokutachou#readme",
   "dependencies": {
+    "@material-ui/core": "^4.4.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "morgan": "^1.9.1",
     "node-wakame": "^1.1.5",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "serve-favicon": "^2.5.0",
     "youtube-dl": "^2.0.1"
   },
