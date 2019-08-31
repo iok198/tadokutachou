@@ -9,7 +9,7 @@
 <body>
     <h1>Find Subtitles</h1>
     <div id="player"></div>
-    <input type="text" id="subtitle" />
+    <input type="text" id="subtitle" value="https://www.youtube.com/watch?v=WUbSwb43Pek"/>
     <button onclick="requestSubtitles()">Submit</button>
     <ol id="subtitle-place"></ol>
 	<script>
@@ -66,9 +66,14 @@
             })
             .then(data => data.json())
             .then(subtitleData => {
-                subtitleData.forEach((data, i) => {
-                    let { sentenceBeginning, sentenceEnd, startTime, endTime, text } = data
-                    document.getElementById("subtitle-place").innerHTML += `<li onclick='goToSeek(this)' data-sentence-beginning='${sentenceBeginning}' data-sentence-end='${sentenceEnd}'>${text}</li>`
+                console.log(subtitleData)
+                subtitleData.forEach((lines, i) => {
+                    let { sentenceBeginning, sentenceEnd } = lines
+                    let subtitleText = lines.parsedData.reduce((totalString, newString) => { 
+                        return totalString + "|" + newString.original 
+                    }, "")
+                    console.log(lines)
+                    document.getElementById("subtitle-place").innerHTML += `<li onclick='goToSeek(this)' data-sentence-beginning='${sentenceBeginning}' data-sentence-end='${sentenceEnd}'>${subtitleText}</li>`
                 })
             })
             .then(err => console.error)

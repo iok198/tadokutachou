@@ -11,13 +11,15 @@ router.get("/subtitles", (req, res, next) => {
 
 router.post("/subtitles", (req, res, next) => {
     let url = req.body.url
-
-    getSubs(url).then(lines => {
-        let mecabLines =  lines.map((line) => parseSentence(line.text))
-        return Promise.all(mecabLines)
-    }).then(results => {
-        res.json(results)
-    }).catch(console.error)
+    getSubs(url)
+        .then(lines => Promise.all(lines.map(line => parseSentence(line.text).then(parsedLine => {
+            return {
+                parsedData: [...parsedLine],
+                ...line
+            }
+        })))).then(results => {
+            res.json(results)
+        }).catch(console.error)
 })
 
 module.exports = router
