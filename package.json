@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha test",
     "start": "node app.js",
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon app.js",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -35,11 +36,19 @@
     "node-wakame": "^1.1.5",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-router-dom": "^5.0.1",
+    "react-youtube": "^7.9.0",
     "serve-favicon": "^2.5.0",
     "youtube-dl": "^2.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
-    "mocha": "^6.2.0"
+    "mocha": "^6.2.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
   }
 }

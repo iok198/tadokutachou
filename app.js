@@ -16,11 +16,13 @@ mecab.tokenizeSentence("どれも面白くなかったから").then(console.log)
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.use(express.static("static"))
+
 app.engine("hbs", hbs({defaultLayout: "layout", extname: ".hbs"}))
-app.set('views', path.join(__dirname, "front"))
+app.set('views', path.join(__dirname, "views"))
 app.set('view engine', 'hbs')
 
-app.get("/", (req, res) => res.send("<h1>Hello World!</h1>"))
+app.get("/*", (req, res) => res.render("index"))
 app.use("/api", subtitles)
 
 app.use((req, res, next) => {
