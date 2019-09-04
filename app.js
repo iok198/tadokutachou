@@ -4,14 +4,14 @@ const logger = require("morgan")
 const path = require("path")
 const bodyParser = require("body-parser")
 const hbs = require("express-handlebars")
+const util = require('util')
 
 const app = express()
 const server = http.createServer(app)
 
-const mecab = require("./tools/mecab")
+const dictionary = require("./tools/dictionary")
+const Dictionary = dictionary.Dictionary
 const subtitles = require("./api/subtitles")
-
-mecab.tokenizeSentence("どれも面白くなかったから").then(console.log)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -47,8 +47,18 @@ app.use((err, req, res, next) => {
       message: err.message,
       error: {}
     })
-})
+});
 
-server.listen(3000, () => {
-    console.log(`Server listening on port 3000`)
-})
+(async () => {
+	await dictionary.setup()
+
+	let d = new Dictionary()
+	console.log(util.inspect(d.search('食べる'), {
+		showHidden: false,
+		depth: null
+	}))
+
+	server.listen(3000, () => {
+	    console.log(`Server listening on port 3000`)
+	})
+})().catch(console.error)
