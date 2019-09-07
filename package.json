@@ -7,7 +7,8 @@
     "test": "mocha test",
     "start": "node app.js",
     "start:dev": "nodemon app.js",
-    "build": "webpack"
+    "build": "webpack",
+    "build:dev": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -28,14 +29,16 @@
   },
   "homepage": "https://github.com/iok198/tadokutachou#readme",
   "dependencies": {
-    "@material-ui/core": "^4.4.0",
     "body-parser": "^1.19.0",
+    "bootstrap": "^4.3.1",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",
     "fuse.js": "^3.4.5",
+    "jquery": "^3.4.1",
     "morgan": "^1.9.1",
     "node-wakame": "^1.1.5",
     "react": "^16.9.0",
+    "react-bootstrap": "^1.0.0-beta.12",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.1",
     "react-youtube": "^7.9.0",
@@ -49,7 +52,12 @@
     "adm-zip": "^0.4.13",
     "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
+    "css-loader": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
     "mocha": "^6.2.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
   }

@@ -78,7 +78,7 @@ class Dictionary {
 					return {
 						expression: x[0],
 						reading: x[1],
-						glossary: x[5]
+						glossary: x[5][0]
 					}
 				})
 	        }
@@ -99,7 +99,7 @@ class Dictionary {
 		return this.dictionaries.map(d => {
 			const fuse = new Fuse(d.data, options)
 			return {
-				provider: d.provider,
+				provider: d.name,
 				results: fuse.search(q).slice(0, 5)
 			}
 		})

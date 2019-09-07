@@ -1,6 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import "bootstrap"
+import "../styles/site.scss"
 
 import Component from "./home"
 import ViewSubtitles from "./youtube"

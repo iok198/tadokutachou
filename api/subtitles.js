@@ -5,12 +5,9 @@ const { parseSentence } = require("../tools/mecab")
 
 const router = express.Router()
 
-router.get("/subtitles", (req, res, next) => {
-    res.render("index", {loadedData: false});
-})
-
-router.post("/subtitles", (req, res, next) => {
-    let url = req.body.url
+router.get("/:url", (req, res, next) => {
+    console.log("I WAS CALLED!!")
+    let url = req.params.url
     getSubs(url)
         .then(lines => Promise.all(lines.map(line => parseSentence(line.text).then(parsedLine => {
             return {

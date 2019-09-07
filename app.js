@@ -11,7 +11,7 @@ const server = http.createServer(app)
 
 const dictionary = require("./tools/dictionary")
 const Dictionary = dictionary.Dictionary
-const subtitles = require("./api/subtitles")
+const api = require("./api/index")
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -22,8 +22,8 @@ app.engine("hbs", hbs({defaultLayout: "layout", extname: ".hbs"}))
 app.set('views', path.join(__dirname, "views"))
 app.set('view engine', 'hbs')
 
+app.use("/api", api)
 app.get("/*", (req, res) => res.render("index"))
-app.use("/api", subtitles)
 
 app.use((req, res, next) => {
     var err = new Error("Not Found")

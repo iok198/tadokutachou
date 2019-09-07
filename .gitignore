@@ -61,4 +61,4 @@ typings/
 .next
 temp
 
-static/bundle.js
+static/*
