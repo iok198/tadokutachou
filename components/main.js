@@ -13,9 +13,10 @@ class App extends React.Component {
             <Router>
                 <div>
                     <Route exact path="/" component={Component} />
+                    <Route path="/subtitles" component={ViewSubtitles} />
+
                     <Link to="/">Home</Link>
                     <Link to="/subtitles">Subtitles</Link>
-                    <Route path="/subtitles" component={ViewSubtitles} />
                 </div>
             </Router>
         )

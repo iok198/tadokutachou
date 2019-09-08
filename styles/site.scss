@@ -1,1 +1,17 @@
-@import "~bootstrap/scss/bootstrap"
+@import "~bootstrap/scss/bootstrap";
+
+.tt-subtitle-view {
+	background-color: $gray-200;
+
+	hr {
+		border-top: 1px solid $gray-300;
+	}
+}
+
+.tt-subtitle-line {
+	background-color: $gray-200;
+}
+
+.tt-subtitle-line:active  {
+	background-color: $gray-100;
+}

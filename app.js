@@ -18,7 +18,7 @@ app.use(bodyParser.json())
 
 app.use(express.static("static"))
 
-app.engine("hbs", hbs({defaultLayout: "layout", extname: ".hbs"}))
+app.engine("hbs", hbs({ defaultLayout: "layout", extname: ".hbs" }))
 app.set('views', path.join(__dirname, "views"))
 app.set('view engine', 'hbs')
 
@@ -51,12 +51,6 @@ app.use((err, req, res, next) => {
 
 (async () => {
 	await dictionary.setup()
-
-	let d = new Dictionary()
-	console.log(util.inspect(d.search('食べる'), {
-		showHidden: false,
-		depth: null
-	}))
 
 	server.listen(3000, () => {
 	    console.log(`Server listening on port 3000`)
