@@ -197,9 +197,9 @@ class ViewSubtitles extends React.Component {
 							onReady={(e) => this.onReady(e)}
 						/>
 					</Col>
-					<Col className="overflow-auto tt-subtitle-view">
+					<Col className="overflow-auto tt-subtitle-view" style={{ height: `${youtubeOptions.height}px` }}>
 						{this.isLoading()
-							? <div className="d-flex justify-content-center w-100" style={{ height: `${youtubeOptions.height}px` }}>
+							? <div className="d-flex justify-content-center w-100 h-100">
 								<FontAwesomeIcon size="6x" spin icon={faCog} className="align-self-center" />
 							</div>
 							: subtitleLineElements.map((e, i) =>
