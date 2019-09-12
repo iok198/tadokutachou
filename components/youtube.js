@@ -9,10 +9,10 @@ import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
-import Overlay from 'react-bootstrap/Overlay'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from "react-bootstrap/Popover"
 import Row from 'react-bootstrap/Row'
+import Collapse from "react-bootstrap/Collapse"
 
 class DefinitionPopover extends React.Component {
 
@@ -24,29 +24,6 @@ class DefinitionPopover extends React.Component {
         }
 
         this.getDefinition = this.getDefinition.bind(this)
-    }
-
-    getDefinition() {
-        const word = this.props.word
-
-        fetch(`/api/dictionary/${word}`, {
-            method: "GET",
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            redirect: 'follow',
-            referrer: 'no-referrer'
-        })
-        .then(res => res.json())
-        .then(data => {
-            this.setState({
-                show: true,
-                dictionaryData: data
-            })
-        })
     }
 
     render() {
@@ -70,21 +47,8 @@ class DefinitionPopover extends React.Component {
         return (
             <>
                 <OverlayTrigger trigger="click" placement="top" overlay={popover}>
-                    <span onClick={this.getDefinition} ref={target}>{this.props.word}</span>
+                    <span onClick={this.getDefinition} ref={target}>{this.props.word.original}</span>
                 </OverlayTrigger>
-                {/* <Overlay show={this.state.show} target={target.current} placement="auto">
-                    <div>
-                        {this.state.dictionaryData.map((entry, i) => {
-                            return (
-                                <div key={i}>
-                                    <h4>{entry.provider}</h4>
-                                    <h3>{entry.results[0].expression}</h3>
-                                    <p>{entry.results[0].glossary}</p>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </Overlay> */}
             </>
         )
     }
@@ -101,7 +65,10 @@ class ViewSubtitles extends React.Component {
             linkInput: "https://www.youtube.com/watch?v=WUbSwb43Pek",
             subtitleLines: [],
 			loadingCount: 0,
-			height: 0
+            height: 0,
+            selectedLine: null,
+            selectedWord: null,
+            definitions: []
         }
     }
 
@@ -146,6 +113,7 @@ class ViewSubtitles extends React.Component {
         .then(subtitleLines => {
             let index = 0
             for (const lineIndex in subtitleLines) {
+                subtitleLines[lineIndex].index = lineIndex
                 for (const wordIndex in subtitleLines[lineIndex].parsedData) {
                     subtitleLines[lineIndex].parsedData[wordIndex].index = index
                     index++
@@ -157,6 +125,28 @@ class ViewSubtitles extends React.Component {
         .then(err => console.error)
     }
 
+    getDefinition(word, line) {
+        fetch(`/api/dictionary/${word.dictionaryForm}`, {
+            method: "GET",
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            referrer: 'no-referrer'
+        })
+        .then(res => res.json())
+        .then(data => {
+            this.setState({
+                definitions: data,
+                selectedWord: word,
+                selectedLine: line
+            })
+        })
+    }
+
     render() {
         const youtubeOptions = {
             height: '390',
@@ -166,10 +156,19 @@ class ViewSubtitles extends React.Component {
         const { videoId, linkInput, subtitleLines } = this.state
 
         const subtitleLineElements = subtitleLines.map((line, i) => {
-            const subtitleText = line.parsedData.map((p, j) => <DefinitionPopover key={j} word={p.dictionaryForm}/>)
-
+            const subtitleText = line.parsedData.map((p, j) => <span key={j} onClick={() => this.getDefinition(p, line)}>{p.original}</span>)
+            console.log(this.state.selectedLine, line)
             return (
-                <div className="tt-subtitle-line px-2 py-2" key={i} onClick={() => this.seekTo(line)}>{subtitleText}</div>
+                <div>
+                    <div className="tt-subtitle-line px-2 py-2" key={i} onClick={() => this.seekTo(line)}>
+                        {subtitleText}
+                    </div>
+                    <Collapse in={this.state.selectedLine && this.state.selectedWord && this.state.selectedLine.index == line.index}>
+                        <div>
+                            { this.state.definitions.map((dict, i) => <p key={i}>{dict.results[0].glossary}</p>) }
+                        </div>
+                    </Collapse>
+                </div>
             )
         })
 
