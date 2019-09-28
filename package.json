@@ -38,6 +38,7 @@
     "express-handlebars": "^3.1.0",
     "fuse.js": "^3.4.5",
     "jquery": "^3.4.1",
+    "mongoose": "^5.7.1",
     "morgan": "^1.9.1",
     "node-wakame": "^1.1.5",
     "react": "^16.9.0",

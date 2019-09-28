@@ -4,14 +4,21 @@ const logger = require("morgan")
 const path = require("path")
 const bodyParser = require("body-parser")
 const hbs = require("express-handlebars")
-const util = require('util')
+const mongoose = require("mongoose")
 
 const app = express()
 const server = http.createServer(app)
+mongoose.connect("mongodb://localhost/tadokutachou", {useNewUrlParser: true})
+
+const db =  mongoose.connection
 
 const dictionary = require("./tools/dictionary")
-const Dictionary = dictionary.Dictionary
 const api = require("./api/index")
+
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function() {
+  console.log("We connected to the Mongo")
+})
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -19,8 +26,8 @@ app.use(bodyParser.json())
 app.use(express.static("static"))
 
 app.engine("hbs", hbs({ defaultLayout: "layout", extname: ".hbs" }))
-app.set('views', path.join(__dirname, "views"))
-app.set('view engine', 'hbs')
+app.set("views", path.join(__dirname, "views"))
+app.set("view engine", "hbs")
 
 app.use("/api", api)
 app.get("/*", (req, res) => res.render("index"))
